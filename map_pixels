@@ -1,5 +1,4 @@
 azul,0000FF = player
-verde escuro?,7A8400 = arma
 vermelho,FF0000 = inimigo
 vermelho claro,FF6565 = vida
 amarelo,FFFF00 = munição
@@ -7,3 +6,7 @@ cinza,4D4D4D = parede de pedra
 preto,000000 = grama
 FFECBC = areia
 1CA3EC = agua
+
+verde escuro?,7A8400 = Canhao
+verde esquisito,AA8400 = SMG
+verde mais esquisito, BE8400 = Rifle

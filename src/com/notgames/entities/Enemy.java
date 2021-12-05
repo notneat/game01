@@ -108,7 +108,7 @@ public class Enemy extends Entity{
 	
 	public boolean playerCalledSpawn(KeyEvent e) {
 			System.out.println("Enemy Spawned");
-			Enemy en = new Enemy(16, 16, 16, 16, Entity.ENEMY_EN);
+			Enemy en = new Enemy(this.getX(),this.getY(), 16, 16, Entity.ENEMY_EN);
 			Game.entities.add(en);
 			Game.enemies.add(en);
 			return false; 

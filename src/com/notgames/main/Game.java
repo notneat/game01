@@ -3,16 +3,13 @@ package com.notgames.main;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics;
-import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -20,6 +17,7 @@ import java.util.Random;
 import javax.swing.JFrame;
 
 import com.notgames.entities.Ammo;
+import com.notgames.entities.Bullet;
 import com.notgames.entities.Enemy;
 import com.notgames.entities.Entity;
 import com.notgames.entities.Lifepack;
@@ -28,7 +26,7 @@ import com.notgames.graficos.Spritesheet;
 import com.notgames.graficos.UI;
 import com.notgames.world.World;
 
-public class Game extends Canvas implements Runnable, KeyListener {
+public class Game extends Canvas implements Runnable, KeyListener, MouseListener {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -44,6 +42,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	
 	public static List<Entity> entities;
 	public static List<Enemy> enemies;
+	public static List<Bullet> bullets; 
+	
 	public static Spritesheet ghost1Spritesheet, itemSpritesheet, playerSpritesheet, tileSpritesheet, weaponSpritesheet;
 	
 	public static World world, entityWorld;
@@ -54,22 +54,16 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public static Random rand;
 	
 	public static UI ui;
-	
-	Font GameFont;
+
+	public static Object WeaponSMG;
+	public static Object WeaponRifle;
+	public static Object WeaponCannon;
 	
 	public Game() {
 		
-		try {
-			GameFont = Font.createFont(Font.TRUETYPE_FONT,new File("GameFont.ttf")).deriveFont(30f);
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,new File("GameFont.ttf")));
-				}
-		catch (IOException | FontFormatException e) {
-			e.printStackTrace();
-		}
-		
 		rand = new Random();
 		addKeyListener(this);
+		addMouseListener(this);
 		this.setPreferredSize(new Dimension(WIDTH*SCALE,HEIGHT*SCALE));
 		frame = new JFrame("Jojinho");
 		initFrame();
@@ -78,6 +72,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		ui = new UI();
 		entities = new ArrayList<Entity>();
 		enemies = new ArrayList<Enemy>();
+		bullets = new ArrayList<Bullet>();
 		playerSpritesheet = new Spritesheet("/playerSpritesheet.png");
 		ghost1Spritesheet = new Spritesheet("/ghost1Spritesheet.png");
 		itemSpritesheet = new Spritesheet("/itemSpritesheet.png");
@@ -124,6 +119,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			Entity e = entities.get(i);
 			e.tick();
 		}
+		
+		for(int i = 0; i < bullets.size(); i++) {
+			bullets.get(i).tick();
+		}
 	}
 	
 	public void render() {
@@ -141,6 +140,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		for(int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			e.render(g);
+		}
+		for(int i = 0; i < bullets.size(); i++) {
+			bullets.get(i).render(g);
 		}
 		ui.render(g);
 		/***/
@@ -193,7 +195,28 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			player.down = true;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_F) {
-			Game.player.ammo-=1;
+				player.isShooting = true;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_1) {
+			if(player.hasSMG) {
+				player.equippedSMG = true;
+				player.equippedRifle = false;
+				player.equippedCannon = false;
+			}
+		}
+		if(e.getKeyCode() == KeyEvent.VK_2) {
+			if(player.hasRifle) {
+				player.equippedRifle = true;
+				player.equippedSMG = false;
+				player.equippedCannon = false;
+			}
+		}
+		if(e.getKeyCode() == KeyEvent.VK_3) {
+			if(player.hasCannon) {
+				player.equippedCannon = true;
+				player.equippedSMG = false;
+				player.equippedRifle = false;
+			}
 		}
 		if(e.getKeyCode() == KeyEvent.VK_R) {
 			if(Game.player.LifePackAmount > 0) {
@@ -204,6 +227,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 				}
 			}
 		}
+		
 		if(e.getKeyCode() == KeyEvent.VK_F3 && UI.showHitbox == false) {
 			UI.showHitbox = true;
 		} else if(e.getKeyCode() == KeyEvent.VK_F3 && UI.showHitbox == true) {
@@ -236,6 +260,37 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	}
 	
 	public void keyTyped(KeyEvent e) {
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		player.mouseIsShooting = true;
+		player.mx = (e.getX()/3);
+		player.my = (e.getY()/3);		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 }

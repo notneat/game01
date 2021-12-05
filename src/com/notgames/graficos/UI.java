@@ -2,12 +2,10 @@ package com.notgames.graficos;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics;
-import java.awt.GraphicsEnvironment;
-import java.io.File;
-import java.io.IOException;
 
+import com.notgames.entities.Entity;
+import com.notgames.entities.WeaponHandler;
 import com.notgames.main.Game;
 
 public class UI {
@@ -16,15 +14,14 @@ public class UI {
 	
 	Font GameFont;
 	
+	private int LPposX = 0;
+	private int LPposY = 0;
+	
+	private int AposX = 0;
+	private int AposY = 0;
+	
 	public UI() {
-		try {
-			GameFont = Font.createFont(Font.TRUETYPE_FONT,new File("GameFont.ttf"));
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,new File("GameFont.ttf")));
-				}
-		catch (IOException | FontFormatException e) {
-			e.printStackTrace();
-		}
+		
 	}
 	
 	public void render(Graphics g) {
@@ -38,27 +35,44 @@ public class UI {
 		g.drawString(healthBarString, 181 + (20 - g.getFontMetrics().stringWidth(healthBarString)) / 152,152);
 
 		if(Game.player.LifePackAmount > 0) {
+			LPposX = 18;
+			LPposY = 143;
 			g.setColor(Color.white);
 			g.setFont(new Font("GameFont",Font.TRUETYPE_FONT,10));
+			if(Game.player.LifePackAmount >= 10) {
+				LPposX = 24;
+			}
 			if(Game.player.LifePackAmount >= 1) {
-				g.drawString(Game.player.LifePackAmount+" Heart",15,155);
+				g.drawImage(Entity.LIFEPACK_EN,LPposX,LPposY,null);
+				g.drawString(Game.player.LifePackAmount+"",15,155);
 			}
-			if(Game.player.LifePackAmount > 1) {
-				g.drawString(Game.player.LifePackAmount+" Hearts",15,155);
-			}
+			
 
 		}
 		if(Game.player.ammo > 0) {
+			AposX = 78;
+			AposY = 143;
 			g.setColor(Color.white);
 			g.setFont(new Font("GameFont",Font.TRUETYPE_FONT,10));
-			if(Game.player.ammo >= 1) {
-				g.drawString(Game.player.ammo+" Bullet",75,155);
+			if(Game.player.ammo >= 10) {
+				AposX = 84;
 			}
-			if(Game.player.ammo > 1) {
-				g.drawString(Game.player.ammo+" Bullets",75,155);
+			if(Game.player.ammo >= 1) {
+				g.drawImage(Entity.AMMO_EN,AposX,AposY,null);
+				g.drawString(Game.player.ammo+"",75,155);
 			}
 		}
 		
+		if(Game.player.equippedSMG) {
+			g.drawImage(WeaponHandler.SMG_RIGHT,6,1,null);
+
+		} else if(Game.player.equippedRifle) {
+			g.drawImage(WeaponHandler.RIFLE_RIGHT,6,1,null);
+
+		} else if(Game.player.equippedCannon) {
+			g.drawImage(WeaponHandler.CANNON_RIGHT,6,1,null);
+		}
+				
 		if(showHitbox == true) {
 			g.setColor(Color.white);
 			g.setFont(new Font("GameFont",Font.TRUETYPE_FONT,10));

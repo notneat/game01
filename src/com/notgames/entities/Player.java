@@ -25,7 +25,18 @@ public class Player extends Entity {
 	public int ammo = 0;
 	
 	public boolean isDamaged = false;
-	private boolean hasGun = false;
+	
+	public boolean hasSMG = false;
+	public boolean hasCannon = false;
+	public boolean hasRifle = false;
+	
+	public boolean equippedSMG = false;
+	public boolean equippedCannon = false;
+	public boolean equippedRifle = false;
+	
+	public boolean isShooting = false, mouseIsShooting = false;
+	
+	public int mx, my;
 	
 	private boolean moved = false;
 	private BufferedImage[] rightPlayer;
@@ -105,6 +116,35 @@ public class Player extends Entity {
 			}
 		}
 		
+		if(mouseIsShooting) {
+			
+			mouseIsShooting = false;
+			
+			if(equippedSMG || equippedRifle || equippedCannon && ammo > 0) {
+				//Atirar
+				ammo-=1;
+				
+				int px = 0, py = 0;
+				double angle = 0;
+				
+				if(dir == rightDir) {
+					px = 16;
+					py = 5;
+					angle = Math.atan2(my - (this.getY()+py - Camera.y),mx - (this.getX()+px - Camera.x));
+				} else {
+					px = -2;
+					py = 5;
+					angle = Math.atan2(my - (this.getY()+py - Camera.y),mx - (this.getX()+px - Camera.x));
+				}
+				
+				double dx = Math.cos(angle);
+				double dy = Math.sin(angle);
+			
+			Bullet bullet = new Bullet(this.getX()+px,this.getY()+py,3,3,null,dx,dy);
+			Game.bullets.add(bullet);
+			}
+		}
+		
 		if(health <= 0) {
 			Game.ui = new UI();
 			Game.entities = new ArrayList<Entity>();
@@ -130,7 +170,7 @@ public class Player extends Entity {
 			Entity atual = Game.entities.get(i);
 			if(atual instanceof Ammo) {
 				if(Entity.isColliding(this,atual)) {
-					ammo+=3;
+					ammo+=2;
 					Game.entities.remove(atual);
 				}
 			}
@@ -142,7 +182,7 @@ public class Player extends Entity {
 			Entity atual = Game.entities.get(i);
 			if(atual instanceof Lifepack) {
 				if(Entity.isColliding(this,atual)) {
-					LifePackAmount++;
+					LifePackAmount+=1;
 					Game.entities.remove(atual);
 				}
 			}
@@ -152,9 +192,21 @@ public class Player extends Entity {
 	public void checkGunCollision() {
 		for(int i = 0; i < Game.entities.size(); i++) {
 			Entity atual = Game.entities.get(i);
-			if(atual instanceof Weapon) {
+			if(atual instanceof WeaponSMG) {
 				if(Entity.isColliding(this,atual)) {
-					hasGun = true;
+					hasSMG = true;
+					Game.entities.remove(atual);
+				}
+			}
+			if(atual instanceof WeaponRifle) {
+				if(Entity.isColliding(this,atual)) {
+					hasRifle = true;
+					Game.entities.remove(atual);
+				}
+			}
+			if(atual instanceof WeaponCannon) {
+				if(Entity.isColliding(this,atual)) {
+					hasCannon = true;
 					Game.entities.remove(atual);
 				}
 			}
@@ -165,16 +217,32 @@ public class Player extends Entity {
 		if(!isDamaged) {
 		if(dir == rightDir) {
 			g.drawImage(rightPlayer[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y, null);
-			if(hasGun) {
+			if(equippedSMG) {
 				//desenhar arma direita
-				g.drawImage(Entity.WEAPON_RIGHT,this.getX()+4 - Camera.x,this.getY() - Camera.y,null);
+				g.drawImage(WeaponHandler.SMG_RIGHT,this.getX()+6 - Camera.x,this.getY()+1 - Camera.y,null);
+			}
+			if(equippedRifle) {
+				//desenhar arma direita
+				g.drawImage(WeaponHandler.RIFLE_RIGHT,this.getX()+6 - Camera.x,this.getY()+1 - Camera.y,null);
+			}
+			if(equippedCannon) {
+				//desenhar arma direita
+				g.drawImage(WeaponHandler.CANNON_RIGHT,this.getX()+5 - Camera.x,this.getY()+3 - Camera.y,null);
 			}
 		}
 		 if(dir == leftDir) {
 			g.drawImage(leftPlayer[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y, null);
-			if(hasGun) {
-				//desenhar arma esquerda
-				g.drawImage(Entity.WEAPON_LEFT,this.getX()-4 - Camera.x,this.getY() - Camera.y,null);
+			if(equippedSMG) {
+				//desenhar arma direita
+				g.drawImage(WeaponHandler.SMG_LEFT,this.getX()-6 - Camera.x,this.getY()+1 - Camera.y,null);
+			}
+			if(equippedRifle) {
+				//desenhar arma direita
+				g.drawImage(WeaponHandler.RIFLE_LEFT,this.getX()-6 - Camera.x,this.getY()+1 - Camera.y,null);
+			}
+			if(equippedCannon) {
+				//desenhar arma direita
+				g.drawImage(WeaponHandler.CANNON_LEFT,this.getX()-5 - Camera.x,this.getY()+3 - Camera.y,null);
 			}
 		}
 		if(dir == upDir) {
@@ -182,9 +250,9 @@ public class Player extends Entity {
 		}
 		if(dir == downDir) {
 			g.drawImage(downPlayer[curAnimation],this.getX() - Camera.x,this.getY() - Camera.y, null);
-			if(hasGun) {
+			if(equippedSMG || equippedRifle || equippedCannon) {
 				//desenhar arma baixo
-					g.drawImage(Entity.WEAPON_FRONT,(int) (this.getX()+1 - Camera.x),this.getY()+5 - Camera.y,null);
+					g.drawImage(WeaponHandler.WEAPON_FRONT,(int) (this.getX()+1 - Camera.x),this.getY()+5 - Camera.y,null);
 				}
 			}
 		} else {
