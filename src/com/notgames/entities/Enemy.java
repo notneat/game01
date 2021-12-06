@@ -1,12 +1,11 @@
 package com.notgames.entities;
 
-import java.awt.Color;
+
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
-import com.notgames.graficos.UI;
 import com.notgames.main.Game;
 import com.notgames.world.Camera;
 import com.notgames.world.World;
@@ -125,9 +124,8 @@ public class Enemy extends Entity{
 		} else if(dir == downDir) {
 			g.drawImage(downEnemy[curAnimation],this.getX()-Camera.x,this.getY()-Camera.y,null);
 		}
-		if(UI.showHitbox == true) {
-			g.setColor(Color.blue);
-			g.fillRect(this.getX()+maskX-Camera.x,this.getY()+maskY-Camera.y,maskW,maskH);
+		if(dir == nullDir) {
+			g.drawImage(rightEnemy[curAnimation],this.getX()-Camera.x,this.getY()-Camera.y,null);
 		}
 	}
 }

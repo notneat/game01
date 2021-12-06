@@ -227,16 +227,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 				}
 			}
 		}
-		
-		if(e.getKeyCode() == KeyEvent.VK_F3 && UI.showHitbox == false) {
-			UI.showHitbox = true;
-		} else if(e.getKeyCode() == KeyEvent.VK_F3 && UI.showHitbox == true) {
-			UI.showHitbox = false;
-		}
-		
 		if(e.getKeyCode() == KeyEvent.VK_F8) {
 			System.out.println("Enemy Spawned");
-			Enemy en = new Enemy(0,0,16,16,Entity.ENEMY_EN);
+			Enemy en = new Enemy(player.getX(),player.getY(),16,16,Entity.ENEMY_EN);
 			Game.entities.add(en);
 			Game.enemies.add(en);
 		}

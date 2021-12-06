@@ -9,9 +9,7 @@ import com.notgames.entities.WeaponHandler;
 import com.notgames.main.Game;
 
 public class UI {
-	
-	public static boolean showHitbox;
-	
+		
 	Font GameFont;
 	
 	private int LPposX = 0;
@@ -71,12 +69,6 @@ public class UI {
 
 		} else if(Game.player.equippedCannon) {
 			g.drawImage(WeaponHandler.CANNON_RIGHT,6,1,null);
-		}
-				
-		if(showHitbox == true) {
-			g.setColor(Color.white);
-			g.setFont(new Font("GameFont",Font.TRUETYPE_FONT,10));
-			g.drawString("Show hitboxes: TRUE",5,10);
 		}
 	}
 	

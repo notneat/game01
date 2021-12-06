@@ -1,6 +1,5 @@
 package com.notgames.entities;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -268,10 +267,6 @@ public class Player extends Entity {
 		if(dir == nullDir) {
 			g.drawImage(rightPlayer[0],this.getX() - Camera.x,this.getY() - Camera.y, null);
 		}
-		if(UI.showHitbox == true) {
-				g.setColor(Color.red);
-				g.drawRect(this.getX()+maskX-Camera.x,this.getY()+maskY-Camera.y,maskW,maskH);
-			}
 	}
 }
 
